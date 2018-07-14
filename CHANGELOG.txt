@@ -1,0 +1,10 @@
+V 0.1
+Created main game controller consisting of -
+    main loop
+    game setup
+    drawing
+    updating
+
+Created player with the following capability -
+    moving
+    animations
