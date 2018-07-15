@@ -14,7 +14,7 @@ class Player:
                           (
                           self.size["Height"],
                           self.size["Width"]))
-        self.speed = 3
+        self.speed = 8
         self.colour = (255, 0, 0)
         self.direction = "Right"
         # animation
@@ -26,16 +26,18 @@ class Player:
         self.__asset_path = ("C:/Users/Alex_/PycharmProjects/py_side_scroller/Assets/Art/")
         self.__idle_path = ("Golden Knight stand idle breathing/Golden Knight right idle/")
         self.__left_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face left/")
-        self.__right_moving_path= ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face right/")
+        self.__right_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face right/")
 
         self.__right_moving_animations = []
         self.__left__moving_animations = []
         self.__moving_animation_counter = 0
-        self.__moving_animation_speed = 3
+        # how many game ticks before we change our animation
+        self.__moving_animation_speed = 1
 
         self.__idle_animations = []
         self.__idle_animation_counter = 0
-        self.__idle_animation_speed = 4
+        # how many game ticks before we change our animation
+        self.__idle_animation_speed = 1
 
         self.__load_animations()
         # endregion

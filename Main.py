@@ -1,7 +1,8 @@
 import pygame, sys
 from pygame.locals import *
 from Player import Player
-
+from Sounds import Sound
+from Background import Background
 
 
 class Main:
@@ -14,13 +15,15 @@ class Main:
         self.WHITE = (255, 255, 255)
         self.GREEN = (0, 255, 0)
         self.RED = (255, 0, 0)
-        self.HEIGHT = 900
-        self.WIDTH = 1200
-        self.FPS = 60
+        self.HEIGHT = 1200
+        self.WIDTH = 1920
+        self.FPS = 30
         self.done = False
         self.screen = None
         self.clock = None
         self.key_press = None
+        self.background = None
+        self.sound = None
 
 
 
@@ -28,6 +31,10 @@ class Main:
         # Setup
         pygame.init()
         player = Player()
+        self.background = Background((self.WIDTH, self.HEIGHT))
+        self.sound = Sound()
+
+
 
         # Set the width and height of the screen [width,height]
         size = [self.WIDTH, self.HEIGHT]
@@ -67,9 +74,11 @@ class Main:
 
     def start_game(self, player):
         # -------- Main Program Loop -----------
-        while not self.done:
-            self.screen.fill(self.WHITE)
 
+        self.sound.play_music()
+        while not self.done:
+            self.screen.fill([255, 255, 255])
+            self.screen.blit(self.background.image, self.background.rect)
             self.event_handler(player)
 
             # draw the player.
@@ -81,6 +90,7 @@ class Main:
 
             # Limit frames per second
             self.clock.tick(self.FPS)
+            print (self.clock.get_fps())
 
     # Close the window and quit.
     pygame.quit()
