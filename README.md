@@ -1,5 +1,6 @@
 # Golden Knight
 A hack and slash wave based game
+
 Project plan can be found @ https://europe-enterprise.taskworld.com/bain-studios/#/project/3/task/14
 
 
