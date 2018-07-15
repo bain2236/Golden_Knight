@@ -14,8 +14,8 @@ class Main:
         self.WHITE = (255, 255, 255)
         self.GREEN = (0, 255, 0)
         self.RED = (255, 0, 0)
-        self.HEIGHT = 500
-        self.WIDTH = 700
+        self.HEIGHT = 900
+        self.WIDTH = 1200
         self.FPS = 60
         self.done = False
         self.screen = None

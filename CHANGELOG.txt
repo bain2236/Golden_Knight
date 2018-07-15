@@ -12,3 +12,4 @@ Created player with the following capability -
     animations
 
 Modified the idle breathing of the golden knight so he now holds his sword - only works correctly when facing right.
+Modified the moving right and left animation so they align correctly with the idle animations.

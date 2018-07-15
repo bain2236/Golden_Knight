@@ -1,5 +1,6 @@
 # Golden Knight
-# A simple side scroller
+# A hack and slash wave based game
+# project plan can be found @ https://europe-enterprise.taskworld.com/bain-studios/#/project/3/task/14
 
 
 # Golden Knight acquired from - https://opengameart.org/content/golden-knight-character-sprite
