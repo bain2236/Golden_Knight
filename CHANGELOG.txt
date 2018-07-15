@@ -1,3 +1,5 @@
+
+
 V 0.1
 Created main game controller consisting of -
     main loop
@@ -8,3 +10,5 @@ Created main game controller consisting of -
 Created player with the following capability -
     moving
     animations
+
+Modified the idle breathing of the golden knight so he now holds his sword - only works correctly when facing right.

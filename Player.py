@@ -19,11 +19,12 @@ class Player:
         self.direction = "Right"
         # animation
 
+
         self.__animation_tick = 0
 
         self.__animation_state = "Idle"
         self.__asset_path = ("C:/Users/Alex_/PycharmProjects/py_side_scroller/Assets/Art/")
-        self.__idle_path = ("Golden Knight stand idle breathing/Golden Knight stand idle breathing/")
+        self.__idle_path = ("Golden Knight stand idle breathing/Golden Knight right idle/")
         self.__left_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face left/")
         self.__right_moving_path= ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face right/")
 
