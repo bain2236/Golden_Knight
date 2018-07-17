@@ -54,7 +54,7 @@ class Main:
         self.screen.blit(obj.display(), (obj.position["x"], obj.position["y"]))
 
     def event_handler(self, player):
-        # determin if X was clicked, or Ctrl+W or Alt+F4 was used
+        # determine if X was clicked, or Ctrl+W or Alt+F4 was used
         if self.key_press is None:
             player.idle()
         for event in pygame.event.get():
@@ -75,10 +75,11 @@ class Main:
     def start_game(self, player):
         # -------- Main Program Loop -----------
 
-        self.sound.play_music()
+        #self.sound.play_music()
         while not self.done:
             self.screen.fill([255, 255, 255])
-            self.screen.blit(self.background.image, self.background.rect)
+            background, background_rect = self.background.draw_background()
+            self.screen.blit(background, background_rect)
             self.event_handler(player)
 
             # draw the player.

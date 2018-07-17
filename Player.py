@@ -7,7 +7,7 @@ class Player:
     def __init__(self):
 
     # region Variables
-        self.position = {"x": -20, "y": -20}
+        self.position = {"x": 0, "y": 580}
         self.size = {"Height": 20, "Width": 20}
         self.shape = Rect((self.position["x"],
                           self.position["y"]),
@@ -24,7 +24,8 @@ class Player:
 
         self.__animation_state = "Idle"
         self.__asset_path = ("C:/Users/Alex_/PycharmProjects/py_side_scroller/Assets/Art/")
-        self.__idle_path = ("Golden Knight stand idle breathing/Golden Knight right idle/")
+        self.__idle_path_right = ("Golden Knight stand idle breathing/Golden Knight right idle/")
+        self.__idle_path_left = ("Golden Knight stand idle breathing/Golden Knight left idle/")
         self.__left_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face left/")
         self.__right_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face right/")
 
@@ -34,7 +35,8 @@ class Player:
         # how many game ticks before we change our animation
         self.__moving_animation_speed = 1
 
-        self.__idle_animations = []
+        self.__idle_animations_right = []
+        self.__idle_animations_left = []
         self.__idle_animation_counter = 0
         # how many game ticks before we change our animation
         self.__idle_animation_speed = 1
@@ -64,10 +66,9 @@ class Player:
         print("animation state : {0}".format(self.__animation_state))
         if self.__animation_state == "Idle":
             if self.direction == "Right":
-                return self.__animate(self.__idle_animations, self.__animation_state)
+                return self.__animate(self.__idle_animations_right, self.__animation_state)
             else:
-                image = self.__animate(self.__idle_animations, self.__animation_state)
-                return pygame.transform.flip(image, True, False)
+                return self.__animate(self.__idle_animations_left, self.__animation_state)
         elif self.__animation_state == "Moving":
             if self.direction == "Right":
                 return self.__animate(self.__right_moving_animations, self.__animation_state)
@@ -84,7 +85,7 @@ class Player:
             self.__animation_tick += 1
             # do an animation based on the animation speed
             if self.__animation_tick % self.__idle_animation_speed == 0:
-                #print(self.__idle_animation_counter)
+                # print(self.__idle_animation_counter)
                 # select a new animation from the list
                 self.__idle_animation_counter += 1
                 # check to stop list going out of bounds
@@ -96,7 +97,7 @@ class Player:
             self.__animation_tick += 1
             # do an animation based on the animation speed
             if self.__animation_tick % self.__moving_animation_speed == 0:
-                #print(self.__idle_animation_counter)
+                # print(self.__idle_animation_counter)
                 # select a new animation from the list
                 self.__moving_animation_counter += 1
                 # check to stop list going out of bounds
@@ -107,14 +108,22 @@ class Player:
 
     def __load_animations(self):
         images = None
-        # load idle animations
-        for _, _, images in os.walk(self.__asset_path + self.__idle_path):
+        # load right idle animations
+        for _, _, images in os.walk(self.__asset_path + self.__idle_path_right):
             pass
         if images is not None:
             for image in images:
                 if ".png" in image:
-                    image = pygame.image.load(os.path.join((self.__asset_path + self.__idle_path + image)))
-                    self.__idle_animations.append(image)
+                    image = pygame.image.load(os.path.join((self.__asset_path + self.__idle_path_right + image)))
+                    self.__idle_animations_right.append(image)
+        # load left idle animations
+        for _, _, images in os.walk(self.__asset_path + self.__idle_path_left):
+            pass
+        if images is not None:
+            for image in images:
+                if ".png" in image:
+                    image = pygame.image.load(os.path.join((self.__asset_path + self.__idle_path_left + image)))
+                    self.__idle_animations_left.append(image)
         # load moving right animations
         for _, _, images in os.walk(self.__asset_path + self.__right_moving_path):
             pass
