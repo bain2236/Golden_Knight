@@ -3,17 +3,20 @@ from pygame.locals import *
 
 
 
-class Player:
-    def __init__(self):
+class Player(pygame.sprite.Sprite):
+    def __init__(self, screen_width, screen_height):
+        pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
 
     # region Variables
-        self.position = {"x": 0, "y": 580}
-        self.size = {"Height": 20, "Width": 20}
-        self.shape = Rect((self.position["x"],
-                          self.position["y"]),
-                          (
-                          self.size["Height"],
-                          self.size["Width"]))
+
+        self.size = {"Height": int(screen_height / 4), "Width": int(screen_width / 8)}
+        # self.shape = Rect((self.position["x"],
+        #                   self.position["y"]),
+        #                   (
+        #                   self.size["Height"],
+        #                   self.size["Width"]))
+
+
         self.speed = 8
         self.colour = (255, 0, 0)
         self.direction = "Right"
@@ -44,18 +47,37 @@ class Player:
         self.__load_animations()
         # endregion
 
+
+        self.rect = self.__idle_animations_left[0].get_rect()
+        self.rect.width = self.size["Width"]
+        self.rect.height = self.size["Height"]
+        self.rect.centerx = int(screen_width / 2)
+        self.rect.centery = int(screen_height - self.size["Height"])
+        self.__print_rect()
+
+    def __print_rect(self):
+        print("x : {0} y : {1}".format(self.rect.x, self.rect.y))
+        print("centerx : {0} centery : {1}".format(self.rect.centerx, self.rect.centery))
+        print("center {0}".format(self.rect.center))
+        print("top left : {0} top right : {1}".format(self.rect.left, self.rect.right))
+        print("top : {0} bottom : {1}".format(self.rect.top, self.rect.bottom))
+        print("topleft : {0} bottomright : {1}".format(self.rect.topleft, self.rect.bottomright))
+        print("width : {0} height : {1}".format(self.rect.width, self.rect.height))
+
+        #print( self.position["y"])
+
     # region External methods
     def idle(self):
-        print("Player is idle")
+        #print("Player is idle")
         self.__animation_state = "Idle"
 
     def move(self, key):
         self.__animation_state = "Moving"
         if key == pygame.K_LEFT:
-            self.position["x"] = self.position["x"] - self.speed
+            self.rect.centerx = self.rect.centerx - self.speed
             self.direction = "Left"
         elif key == pygame.K_RIGHT:
-            self.position["x"] = self.position["x"] + self.speed
+            self.rect.centerx = self.rect.centerx + self.speed
             self.direction = "Right"
         else:
             self.__animation_state = "Idle"
@@ -63,9 +85,10 @@ class Player:
 
 
     def display(self):
-        print("animation state : {0}".format(self.__animation_state))
+        #print("animation state : {0}".format(self.__animation_state))
         if self.__animation_state == "Idle":
             if self.direction == "Right":
+                #print("display function return".format(self.__animate(self.__idle_animations_right, self.__animation_state)))
                 return self.__animate(self.__idle_animations_right, self.__animation_state)
             else:
                 return self.__animate(self.__idle_animations_left, self.__animation_state)
@@ -91,7 +114,7 @@ class Player:
                 # check to stop list going out of bounds
                 if self.__idle_animation_counter > len(animations) - 1:
                     self.__idle_animation_counter = 0
-            return animations[self.__idle_animation_counter]
+            return pygame.transform.scale(animations[self.__idle_animation_counter], (self.rect.width, self.rect.height))
         elif self.__animation_state == "Moving":
             # increment the tick so animations on happen at certain points
             self.__animation_tick += 1
@@ -103,7 +126,7 @@ class Player:
                 # check to stop list going out of bounds
                 if self.__moving_animation_counter > len(animations) - 1:
                     self.__moving_animation_counter = 0
-            return animations[self.__moving_animation_counter]
+            return pygame.transform.scale(animations[self.__moving_animation_counter], (self.rect.width, self.rect.height))
 
 
     def __load_animations(self):

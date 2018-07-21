@@ -15,7 +15,7 @@ class Main:
         self.WHITE = (255, 255, 255)
         self.GREEN = (0, 255, 0)
         self.RED = (255, 0, 0)
-        self.HEIGHT = 1200
+        self.HEIGHT = 700
         self.WIDTH = 1920
         self.FPS = 30
         self.done = False
@@ -30,7 +30,7 @@ class Main:
     def setup_game(self):
         # Setup
         pygame.init()
-        player = Player()
+        player = Player(self.WIDTH, self.HEIGHT)
         self.background = Background((self.WIDTH, self.HEIGHT))
         self.sound = Sound()
 
@@ -40,7 +40,7 @@ class Main:
         size = [self.WIDTH, self.HEIGHT]
         self.screen = pygame.display.set_mode(size)
 
-        pygame.display.set_caption("Platform V1")
+        pygame.display.set_caption("Golden Knight V0.1")
 
         # Used to manage how fast the screen updates
         self.clock = pygame.time.Clock()
@@ -51,7 +51,8 @@ class Main:
         return player
 
     def draw_object(self, obj):
-        self.screen.blit(obj.display(), (obj.position["x"], obj.position["y"]))
+#        print("draw_object return {0}".format(self.screen.blit(obj.display(), obj.rect)))
+        self.screen.blit(obj.display(), obj.rect)
 
     def event_handler(self, player):
         # determine if X was clicked, or Ctrl+W or Alt+F4 was used
@@ -75,11 +76,31 @@ class Main:
     def start_game(self, player):
         # -------- Main Program Loop -----------
 
+        self.screen.fill([255, 255, 255])
+        sky, ground, near, far, rect = self.background.draw_all((self.WIDTH, self.HEIGHT))
+#        print("background draw all return{0}".format(self.background.draw_all((self.WIDTH, self.HEIGHT))))
+        self.screen.blit(sky, rect)
+        self.screen.blit(far, rect)
+        self.screen.blit(near, rect)
+        self.screen.blit(ground, rect)
+
+
+
+
         #self.sound.play_music()
         while not self.done:
-            self.screen.fill([255, 255, 255])
-            background, background_rect = self.background.draw_background()
-            self.screen.blit(background, background_rect)
+            pos, box = self.background.draw_layer_around_obj(player)
+
+
+
+            self.screen.blit(sky, pos, box)
+            self.screen.blit(far, pos, box)
+            self.screen.blit(near, pos, box)
+            self.screen.blit(ground, pos, box)
+
+
+
+
             self.event_handler(player)
 
             # draw the player.
