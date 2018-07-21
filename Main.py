@@ -75,7 +75,7 @@ class Main:
 
     def start_game(self, player):
         # -------- Main Program Loop -----------
-
+        self.sound.play_music()
         self.screen.fill([255, 255, 255])
         sky, ground, near, far, rect = self.background.draw_all((self.WIDTH, self.HEIGHT))
 #        print("background draw all return{0}".format(self.background.draw_all((self.WIDTH, self.HEIGHT))))
@@ -112,7 +112,7 @@ class Main:
 
             # Limit frames per second
             self.clock.tick(self.FPS)
-            print (self.clock.get_fps())
+            print(self.clock.get_fps())
 
     # Close the window and quit.
     pygame.quit()

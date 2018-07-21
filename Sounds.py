@@ -20,17 +20,16 @@ class Sound:
         if background_music is not None:
             for song in background_music:
                 if ".mp3" in song:
-                    song =(os.path.join((self.__asset_path + self.__background_music_path + song)))
+                    song = (os.path.join((self.__asset_path + self.__background_music_path + song)))
+                    pygame.mixer.music.load(song)
                     self.background_music.append(song)
 
 
-    def play_music(self):
-        print(self.background_music)
-        print(self.background_music[0])
-        song = pygame.mixer.music.load(self.background_music[0])
-        print(song)
-        print(type(song))
+    # def play_music(self):
+    #
+    #     pygame.mixer.music.play(-1, 0.0)
 
-        pygame.mixer.music.play(song)
+    def play_music(self):
         for song in self.background_music:
             pygame.mixer.music.queue(song)
+        pygame.mixer.music.play()
