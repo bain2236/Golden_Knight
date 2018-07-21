@@ -1,4 +1,4 @@
-import pygame, sys, os
+import pygame, sys, os, math
 from pygame.locals import *
 
 
@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         #                   self.size["Width"]))
 
 
-        self.speed = 8
+        self.speed = 4
         self.colour = (255, 0, 0)
         self.direction = "Right"
         # animation
@@ -38,12 +38,12 @@ class Player(pygame.sprite.Sprite):
         self.__left_attacking_animations = []
         self.__right_attacking_animations = []
         self.__attacking_animations_counter = 0
-        self.__atacking_animations_speed = 1
+        self.__atacking_animations_speed = 5
         self.__right_moving_animations = []
         self.__left__moving_animations = []
         self.__moving_animation_counter = 0
         # how many game ticks before we change our animation
-        self.__moving_animation_speed = 1
+        self.__moving_animation_speed = int(math.sqrt(self.speed)/2) if int(math.sqrt(self.speed)/2) > 1 else 1
 
         self.__idle_animations_right = []
         self.__idle_animations_left = []
