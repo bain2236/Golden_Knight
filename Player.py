@@ -31,7 +31,14 @@ class Player(pygame.sprite.Sprite):
         self.__idle_path_left = ("Golden Knight stand idle breathing/Golden Knight left idle/")
         self.__left_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face left/")
         self.__right_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face right/")
+        self.__left_attacking_path = ("Golden Knight attack/Golden Knight attack 2 slash face left/")
+        self.__right_attacking_path = ("Golden Knight attack/Golden Knight attack 2 slash face right/")
 
+
+        self.__left_attacking_animations = []
+        self.__right_attacking_animations = []
+        self.__attacking_animations_counter = 0
+        self.__atacking_animations_speed = 1
         self.__right_moving_animations = []
         self.__left__moving_animations = []
         self.__moving_animation_counter = 0
@@ -54,6 +61,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = int(screen_width / 2)
         self.rect.centery = int(screen_height - self.size["Height"])
         self.__print_rect()
+
+
+    def __print_player(self):
+        print(self.__dict__)
 
     def __print_rect(self):
         print("x : {0} y : {1}".format(self.rect.x, self.rect.y))
@@ -82,10 +93,18 @@ class Player(pygame.sprite.Sprite):
         else:
             self.__animation_state = "Idle"
 
+    def attack(self):
+        print("setting animation state to attacking")
+        self.__animation_state = "Attacking"
+
+      #  print("attacking")
+      #  self.__print_player()
+
 
 
     def display(self):
-        #print("animation state : {0}".format(self.__animation_state))
+        # print("animation state : {0}".format(self.__animation_state))
+
         if self.__animation_state == "Idle":
             if self.direction == "Right":
                 #print("display function return".format(self.__animate(self.__idle_animations_right, self.__animation_state)))
@@ -97,6 +116,12 @@ class Player(pygame.sprite.Sprite):
                 return self.__animate(self.__right_moving_animations, self.__animation_state)
             else:
                 return self.__animate(self.__left__moving_animations, self.__animation_state)
+        elif self.__animation_state == "Attacking":
+            if self.direction == "Right":
+                print("drawing attacks")
+                return self.__animate(self.__right_attacking_animations, self.__animation_state)
+            else:
+                return self.__animate(self.__left_attacking_animations, self.__animation_state)
     # endregion
 
     # region Personal Methods
@@ -114,7 +139,8 @@ class Player(pygame.sprite.Sprite):
                 # check to stop list going out of bounds
                 if self.__idle_animation_counter > len(animations) - 1:
                     self.__idle_animation_counter = 0
-            return pygame.transform.scale(animations[self.__idle_animation_counter], (self.rect.width, self.rect.height))
+            return pygame.transform.scale(animations[self.__idle_animation_counter],
+                                          (self.rect.width, self.rect.height))
         elif self.__animation_state == "Moving":
             # increment the tick so animations on happen at certain points
             self.__animation_tick += 1
@@ -126,7 +152,23 @@ class Player(pygame.sprite.Sprite):
                 # check to stop list going out of bounds
                 if self.__moving_animation_counter > len(animations) - 1:
                     self.__moving_animation_counter = 0
-            return pygame.transform.scale(animations[self.__moving_animation_counter], (self.rect.width, self.rect.height))
+            return pygame.transform.scale(animations[self.__moving_animation_counter],
+                                          (self.rect.width, self.rect.height))
+        elif self.__animation_state == "Attacking":
+            print("animating the attack")
+            # increment the tick so animations on happen at certain points
+            self.__animation_tick += 1
+            # do an animation based on the animation speed
+            if self.__animation_tick % self.__atacking_animations_speed == 0:
+                # print(self.__idle_animation_counter)
+                # select a new animation from the list
+                self.__attacking_animations_counter += 1
+                # check to stop list going out of bounds
+                if self.__attacking_animations_counter > len(animations) - 1:
+                    self.__attacking_animations_counter = 0
+            return pygame.transform.scale(animations[self.__attacking_animations_counter],
+                                          (self.rect.width, self.rect.height))
+
 
 
     def __load_animations(self):
@@ -164,6 +206,22 @@ class Player(pygame.sprite.Sprite):
                 if ".png" in image:
                     image = pygame.image.load(os.path.join((self.__asset_path + self.__left_moving_path + image)))
                     self.__left__moving_animations.append(image)
+         # load attacking left animations
+        for _, _, images in os.walk(self.__asset_path + self.__left_attacking_path):
+            pass
+        if images is not None:
+            for image in images:
+                if ".png" in image:
+                    image = pygame.image.load(os.path.join((self.__asset_path + self.__left_attacking_path + image)))
+                    self.__left_attacking_animations.append(image)
+            # load attacking right animations
+        for _, _, images in os.walk(self.__asset_path + self.__right_attacking_path):
+            pass
+        if images is not None:
+            for image in images:
+                if ".png" in image:
+                    image = pygame.image.load(os.path.join((self.__asset_path + self.__right_attacking_path + image)))
+                    self.__right_attacking_animations.append(image)
 
 
     # endregion

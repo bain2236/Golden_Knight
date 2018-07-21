@@ -57,6 +57,7 @@ class Main:
     def event_handler(self, player):
         # determine if X was clicked, or Ctrl+W or Alt+F4 was used
         if self.key_press is None:
+            print("nothing pressed, player is idle")
             player.idle()
         for event in pygame.event.get():
             #print ("EVENT")
@@ -65,13 +66,19 @@ class Main:
             elif event.type == pygame.KEYDOWN:
                 self.key_press = event.key
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_SPACE:
+                    print("space released")
                     self.key_press = None
                     player.idle()
         if self.key_press == K_ESCAPE:
             self.done = True
-        if self.key_press is not None:
+        if self.key_press is not None and not self.key_press == pygame.K_SPACE:
             player.move(self.key_press)
+        if self.key_press == pygame.K_SPACE:
+            print("space pushed")
+            player.attack()
+
+
 
     def start_game(self, player):
         # -------- Main Program Loop -----------
@@ -112,7 +119,7 @@ class Main:
 
             # Limit frames per second
             self.clock.tick(self.FPS)
-            print(self.clock.get_fps())
+            # print(self.clock.get_fps())
 
     # Close the window and quit.
     pygame.quit()
