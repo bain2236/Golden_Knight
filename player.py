@@ -17,13 +17,14 @@ class Player(pygame.sprite.Sprite):
         #                   self.size["Width"]))
 
 
-        self.speed = 4
+        self.speed = 7
         self.colour = (255, 0, 0)
         self.direction = "Right"
         # animation
 
 
         self.__animation_tick = 0
+
 
         self.__animation_state = "Idle"
         self.__asset_path = ("C:/Users/Alex_/PycharmProjects/py_side_scroller/Assets/Art/")
@@ -38,7 +39,7 @@ class Player(pygame.sprite.Sprite):
         self.__left_attacking_animations = []
         self.__right_attacking_animations = []
         self.__attacking_animations_counter = 0
-        self.__atacking_animations_speed = 5
+        self.__atacking_animations_speed = int(math.sqrt(self.speed)/2) if int(math.sqrt(self.speed)/2) > 1 else 1
         self.__right_moving_animations = []
         self.__left__moving_animations = []
         self.__moving_animation_counter = 0

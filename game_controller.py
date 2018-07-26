@@ -1,8 +1,8 @@
 import pygame, sys
 from pygame.locals import *
-from Player import Player
-from Sounds import Sound
-from Background import Background
+from player import Player
+from sounds import Sound
+from background import Background
 
 
 class Main:
