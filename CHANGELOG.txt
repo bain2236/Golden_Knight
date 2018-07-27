@@ -1,3 +1,6 @@
+V0.3
+created enemy factory - WIP
+
 V 0.2
 Finished up random background generation
 turned character into sprite
