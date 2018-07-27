@@ -140,6 +140,7 @@ class Player(pygame.sprite.Sprite):
                 # check to stop list going out of bounds
                 if self.__idle_animation_counter > len(animations) - 1:
                     self.__idle_animation_counter = 0
+                    self.__animation_tick = 0
             return pygame.transform.scale(animations[self.__idle_animation_counter],
                                           (self.rect.width, self.rect.height))
         elif self.__animation_state == "Moving":
@@ -153,6 +154,7 @@ class Player(pygame.sprite.Sprite):
                 # check to stop list going out of bounds
                 if self.__moving_animation_counter > len(animations) - 1:
                     self.__moving_animation_counter = 0
+                    self.__animation_tick = 0
             return pygame.transform.scale(animations[self.__moving_animation_counter],
                                           (self.rect.width, self.rect.height))
         elif self.__animation_state == "Attacking":
@@ -167,6 +169,7 @@ class Player(pygame.sprite.Sprite):
                 # check to stop list going out of bounds
                 if self.__attacking_animations_counter > len(animations) - 1:
                     self.__attacking_animations_counter = 0
+                    self.__animation_tick = 0
             return pygame.transform.scale(animations[self.__attacking_animations_counter],
                                           (self.rect.width, self.rect.height))
 

@@ -3,6 +3,7 @@ from pygame.locals import *
 from player import Player
 from sounds import Sound
 from background import Background
+from enemy_controller import Enemy_controller
 
 
 class Main:
@@ -24,7 +25,7 @@ class Main:
         self.key_press = None
         self.background = None
         self.sound = None
-
+        self.spawner = Enemy_controller()
 
 
     def setup_game(self):
@@ -33,6 +34,10 @@ class Main:
         player = Player(self.WIDTH, self.HEIGHT)
         self.background = Background((self.WIDTH, self.HEIGHT))
         self.sound = Sound()
+
+
+
+
 
 
 
@@ -57,7 +62,7 @@ class Main:
     def event_handler(self, player):
         # determine if X was clicked, or Ctrl+W or Alt+F4 was used
         if self.key_press is None:
-            print("nothing pressed, player is idle")
+            #print("nothing pressed, player is idle")
             player.idle()
         for event in pygame.event.get():
             #print ("EVENT")
@@ -107,12 +112,13 @@ class Main:
 
 
 
-
             self.event_handler(player)
 
             # draw the player.
             self.draw_object(player)
 
+            # update enemies
+            self.spawner.update()
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 
