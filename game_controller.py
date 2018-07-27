@@ -119,6 +119,8 @@ class Main:
 
             # update enemies
             self.spawner.update()
+#            for creep in self.spawner.creeps:
+#                self.draw_object(creep)
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 
