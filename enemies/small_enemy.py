@@ -1,30 +1,40 @@
 from enemies.enemy import Enemy
 import random, os, pygame
+from functions import load_animations
+
 
 class Small_enemy(Enemy):
-    def __init__(self, name=None):
-        Enemy.__init__(self, name)
-        print("CONSTRUCTING SUB CLASS")
-        #print(self.__dict__)
+    def __init__(self,  screen_size=None, name=None):
+
+        super().__init__( screen_size,name)
+
+        self.__animation_path = "Enemies/small_enemy/"
         self.__direction_choice = ["Left", "Right"]
+
         self.direction = random.choice(self.__direction_choice)
-        self.__animation_state = "Moving"
         self.speed = 5
         self.rect = None
-        self.__animation_path = "Enemies/small_enemy/"
-        #self.__load_animations(super(Small_enemy, self).__asset_path, self.__animation_path)
-        #self.rect = self.__animations[0].get_rect()
+        self.load_animations(self.__animation_path)
+        self.animation_state = "Moving"
+        self.animation_tick = 0
+        self.animation_speed = 5
+        self.moving_animation_counter = 0
+        self.rect.width = self.size["Width"]
+        self.rect.height = self.size["Height"]
 
-
-        print(self.__dict__)
+        if self.direction == "Left":
+            self.rect.centerx = screen_size[0] + self.rect.width
+            self.rect.centery = screen_size[1] - self.size["Height"]*3 - 3
+        elif self.direction == "Right":
+            self.rect.centerx = 0 - self.rect.width
+            self.rect.centery = screen_size[1] - self.size["Height"]*3 - 5
+            pass
+        print("{0} says: I AM ALIVE! -- {1}".format(self.name, self.__dict__))
 
 
     def move(self):
-        if not self.rect:
-            self.__load_animations(self.__asset_path, self.__animation_path)
         if self.direction == "Left":
             self.rect.centerx = self.rect.centerx - self.speed
-
         elif self.direction == "Right":
             self.rect.centerx = self.rect.centerx + self.speed
 
@@ -36,22 +46,4 @@ class Small_enemy(Enemy):
         #print("my name is {0}, I'm a small enemy attacking".format(self.name))
         pass
 
-    def display(self):
-        print(self.__dict__)
-        if self.direction == "Right":
-            return
-        elif self.direction == "Left":
-            return
 
-    def __load_animations(self, asset_path, object_path):
-        print("getting animations from {0}{1}".format(asset_path, object_path))
-        images = None
-        # load right idle animations
-        for _, _, images in os.walk(asset_path + object_path):
-            pass
-        if images is not None:
-            for image in images:
-                if ".png" in image:
-                    image = pygame.image.load(os.path.join((asset_path + object_path + image)))
-                    self.__animations.append(image)
-                    self.rect = self.__animation[0].get_rect()

@@ -2,7 +2,7 @@ import pygame, os, random
 
 
 class Background(pygame.sprite.Sprite):
-    def __init__(self, screen_size):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.__path_to_backgrounds = "C:/Users/Alex_/PycharmProjects/py_side_scroller/Assets/Art/Backgrounds/"
         self.__path_to_sky = "sky/"
@@ -13,6 +13,7 @@ class Background(pygame.sprite.Sprite):
         self.__possible_ground = []
         self.__possible_far = []
         self.__possible_near = []
+
 
 
         self.__load_background()
@@ -54,8 +55,18 @@ class Background(pygame.sprite.Sprite):
 
 
     def draw_layer_around_obj(self, obj):
+        """previously used instead of draw ground layers. currently UNUSED"""
         return (obj.rect.x, obj.rect.y),\
-               (obj.rect.x, obj.rect.y, obj.rect.height + obj.rect.height / 2, obj.rect.width + obj.rect.width / 2)
+               (obj.rect.x, obj.rect.y, obj.rect.height * 1.2, obj.rect.width * 4)
+
+
+    def draw_box(self, height, width, screen):
+        """debug only"""
+        pygame.draw.rect(screen, (255, 255, 255), [0, height - 300, width, 300])
+
+    def draw_ground_layers(self, height, width):
+        return (0, height - 300),\
+               (0, height - 300, width, 300)
 
 
     def draw_background(self):

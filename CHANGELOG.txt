@@ -1,5 +1,6 @@
 V0.3
-created enemy factory - WIP
+created enemy factory, created small enemies
+pulled out load animations into a helper function
 
 V 0.2
 Finished up random background generation

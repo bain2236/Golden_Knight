@@ -3,6 +3,7 @@ from pygame.locals import *
 from player import Player
 from sounds import Sound
 from background import Background
+from enemy_controller import Enemy_controller
 
 
 
@@ -23,8 +24,9 @@ class Main:
         self.screen = None
         self.clock = None
         self.key_press = None
-        self.background = Background((self.WIDTH, self.HEIGHT))
+        self.background = Background()
         self.sound = Sound()
+        self.enemy_controller = Enemy_controller(self.WIDTH, self.HEIGHT)
 
 
 
@@ -93,24 +95,23 @@ class Main:
 
         #self.sound.play_music()
         while not self.done:
-            pos, box = self.background.draw_layer_around_obj(player)
-
-
-
+            pos, box = self.background.draw_ground_layers(self.HEIGHT, self.WIDTH)
             self.screen.blit(sky, pos, box)
             self.screen.blit(far, pos, box)
             self.screen.blit(near, pos, box)
             self.screen.blit(ground, pos, box)
 
-
+            for creep in self.enemy_controller.creeps:
+                self.draw_object(creep)
 
             self.event_handler(player)
 
             # draw the player.
             self.draw_object(player)
 
+            self.enemy_controller.update()
 
-#
+
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 

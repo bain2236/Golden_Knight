@@ -3,11 +3,13 @@ import enemies, random, names
 
 
 class Enemy_controller():
-    def __init__(self):
+    def __init__(self, screen_width, screen_height):
         self.enemy_types = ["small_enemy"]
         self.creeps = []
         self.game_tick = 0
-        pass
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+
 
     def update(self):
         """
@@ -31,7 +33,8 @@ class Enemy_controller():
 
     def __spawn_enemy(self):
 
-        self.creeps.append(enemies.build_enemy(random.choice(self.enemy_types), names.get_first_name()))
+        self.creeps.append(enemies.build_enemy(random.choice(self.enemy_types), name=names.get_first_name(),
+                                               screen_size = [self.screen_width, self.screen_height]))
 
     def __update_enemies(self):
         # we have creeps, move them

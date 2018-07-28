@@ -22,12 +22,12 @@ def build_enemy(enemy_name, *args, **kwargs):
         # import the module
         enemy_module = import_module('.' + module_name, package='enemies')
         # create the class from the module
-        print("enemy module : {0}".format(enemy_module))
-        print("class name: {0}".format(class_name))
+        # print("enemy module : {0}".format(enemy_module))
+        # print("class name: {0}".format(class_name))
         enemy_class = getattr(enemy_module, class_name)
         # instantiate the class into an obj
         instance = enemy_class(*args, **kwargs)
-        print("created {0}".format(instance))
+       # print("created {0}".format(instance))
     # handle any issues.
     except (AttributeError, ModuleNotFoundError):
         raise ImportError('{} is not part of our enemy collection!'.format(enemy_name))
