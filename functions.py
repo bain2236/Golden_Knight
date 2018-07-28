@@ -2,6 +2,10 @@ import os, pygame
 art_asset_path = ("C:/Users/Alex_/PycharmProjects/py_side_scroller/Assets/Art/")
 
 
+"""
+Helper functions for use by many classes
+"""
+
 def load_animations(animations, animation_path):
 
     images = None

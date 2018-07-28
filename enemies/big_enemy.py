@@ -1,5 +1,8 @@
 from enemies.enemy import Enemy
 
+# todo complete big enemy much like the small enemy implementation
+
+
 class Big_enemy(Enemy):
     def __int__(self, name=None):
         Enemy.__init__(self, name)

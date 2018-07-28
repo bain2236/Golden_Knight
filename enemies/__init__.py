@@ -5,9 +5,12 @@ from .enemy import Enemy
 
 def build_enemy(enemy_name, *args, **kwargs):
     """
-    Factory for building enemies.
+    Factory for building enemies by dynamically importing them and creating them using
+    This function and set up was modified from https://www.bnmetrics.com/blog/factory-pattern-in-python3-simple-version
+    Thank you to the author
     :param enemy_name:
-    :param args:
+    :param args: need to do some experimentation into *args and **kwargs - I know roughly what they do but need more
+    specific information regarding them
     :param kwargs:
     :return:
     """

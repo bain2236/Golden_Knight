@@ -5,6 +5,9 @@ from functions import load_animations
 
 
 class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
+    """
+    abstract super class for the enemies
+    """
 
     def __init__(self, screen_size=None, name=None):
         #print("CONSTRUCTING BASE CLASS")
@@ -19,9 +22,11 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
         self.animation_speed = None
         self.moving_animation_counter = None
 
-
-
     def load_animations(self, path_to_enemy_animations):
+        """
+        calls the helper function to fill up the animation list
+        creates the enemy rect
+        """
         self.animations = load_animations(self.animations, path_to_enemy_animations)
         self.rect = self.animations[0].get_rect()
 
@@ -35,6 +40,10 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
 
 
     def display(self):
+        """
+        draws the enemy
+        :return:
+        """
         if self.direction == "Right":
             return self.animate(self.animations, self.animation_state)
         elif self.direction == "Left":
@@ -42,6 +51,12 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
         pass
 
     def animate(self, animations, animation_state):
+        """
+        same as the players animation function - this should be pulled out into helper functions
+        :param animations:
+        :param animation_state:
+        :return:
+        """
         if animation_state == "Moving":
             # increment the tick so animations on happen at certain points
             self.animation_tick += 1
