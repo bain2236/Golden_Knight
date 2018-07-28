@@ -3,7 +3,7 @@ from pygame.locals import *
 from player import Player
 from sounds import Sound
 from background import Background
-from enemy_controller import Enemy_controller
+
 
 
 class Main:
@@ -23,23 +23,15 @@ class Main:
         self.screen = None
         self.clock = None
         self.key_press = None
-        self.background = None
-        self.sound = None
-        self.spawner = Enemy_controller()
+        self.background = Background((self.WIDTH, self.HEIGHT))
+        self.sound = Sound()
+
 
 
     def setup_game(self):
         # Setup
         pygame.init()
         player = Player(self.WIDTH, self.HEIGHT)
-        self.background = Background((self.WIDTH, self.HEIGHT))
-        self.sound = Sound()
-
-
-
-
-
-
 
         # Set the width and height of the screen [width,height]
         size = [self.WIDTH, self.HEIGHT]
@@ -117,10 +109,8 @@ class Main:
             # draw the player.
             self.draw_object(player)
 
-            # update enemies
-            self.spawner.update()
-#            for creep in self.spawner.creeps:
-#                self.draw_object(creep)
+
+#
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 

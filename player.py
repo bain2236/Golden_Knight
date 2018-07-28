@@ -1,6 +1,6 @@
 import pygame, sys, os, math
 from pygame.locals import *
-
+from functions import load_animations
 
 
 class Player(pygame.sprite.Sprite):
@@ -24,10 +24,7 @@ class Player(pygame.sprite.Sprite):
 
 
         self.__animation_tick = 0
-
-
         self.__animation_state = "Idle"
-        self.__asset_path = ("C:/Users/Alex_/PycharmProjects/py_side_scroller/Assets/Art/")
         self.__idle_path_right = ("Golden Knight stand idle breathing/Golden Knight right idle/")
         self.__idle_path_left = ("Golden Knight stand idle breathing/Golden Knight left idle/")
         self.__left_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face left/")
@@ -176,57 +173,12 @@ class Player(pygame.sprite.Sprite):
 
 
     def __load_animations(self):
-        images = None
-        # load right idle animations
-        for _, _, images in os.walk(self.__asset_path + self.__idle_path_right):
-            pass
-        if images is not None:
-            for image in images:
-                if ".png" in image:
-                    image = pygame.image.load(os.path.join((self.__asset_path + self.__idle_path_right + image)))
-                    self.__idle_animations_right.append(image)
-        # load left idle animations
-        for _, _, images in os.walk(self.__asset_path + self.__idle_path_left):
-            pass
-        if images is not None:
-            for image in images:
-                if ".png" in image:
-                    image = pygame.image.load(os.path.join((self.__asset_path + self.__idle_path_left + image)))
-                    self.__idle_animations_left.append(image)
-        # load moving right animations
-        for _, _, images in os.walk(self.__asset_path + self.__right_moving_path):
-            pass
-        if images is not None:
-            for image in images:
-                if ".png" in image:
-                    print((self.__asset_path + self.__right_moving_path + image))
-                    image = pygame.image.load(os.path.join((self.__asset_path + self.__right_moving_path + image)))
-                    self.__right_moving_animations.append(image)
-        # load moving left animations
-        for _, _, images in os.walk(self.__asset_path + self.__left_moving_path):
-            pass
-        if images is not None:
-            for image in images:
-                if ".png" in image:
-                    image = pygame.image.load(os.path.join((self.__asset_path + self.__left_moving_path + image)))
-                    self.__left__moving_animations.append(image)
-         # load attacking left animations
-        for _, _, images in os.walk(self.__asset_path + self.__left_attacking_path):
-            pass
-        if images is not None:
-            for image in images:
-                if ".png" in image:
-                    image = pygame.image.load(os.path.join((self.__asset_path + self.__left_attacking_path + image)))
-                    self.__left_attacking_animations.append(image)
-            # load attacking right animations
-        for _, _, images in os.walk(self.__asset_path + self.__right_attacking_path):
-            pass
-        if images is not None:
-            for image in images:
-                if ".png" in image:
-                    image = pygame.image.load(os.path.join((self.__asset_path + self.__right_attacking_path + image)))
-                    self.__right_attacking_animations.append(image)
-
+        self.__idle_animations_right = load_animations(self.__idle_animations_right, self.__idle_path_right)
+        self.__idle_animations_left = load_animations(self.__idle_animations_left, self.__idle_path_left)
+        self.__right_moving_animations = load_animations(self.__right_moving_animations, self.__right_moving_path)
+        self.__left__moving_animations = load_animations(self.__left__moving_animations, self.__left_moving_path)
+        self.__left_attacking_animations = load_animations(self.__left_attacking_animations, self.__left_attacking_path)
+        self.__right_attacking_animations = load_animations(self.__right_attacking_animations, self.__right_attacking_path)
 
     # endregion
 
