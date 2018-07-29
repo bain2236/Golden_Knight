@@ -1,6 +1,6 @@
 import pygame, sys, os, math
 from pygame.locals import *
-from functions import load_animations
+from functions import load_animations, animate
 
 
 class Player(pygame.sprite.Sprite):
@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
 
     # region VARIABLES
 
-        self.size = {"Height": int(screen_height / 4), "Width": int(screen_width / 8)}
+        self.size = {"Height": int(screen_height / 4), "Width": int(screen_width / 7)}
         self.speed = 7
         self.colour = (255, 0, 0)
         self.direction = "Right"
@@ -34,12 +34,14 @@ class Player(pygame.sprite.Sprite):
         self.__idle_animations_left = []
 
         # animation speeds
-        self.__atacking_animations_speed = int(math.sqrt(self.speed) / 2) if int(math.sqrt(self.speed) / 2) > 1 else 1
+        # todo fix the animation speed so it gets faster as the players speed increases - use log but more thought is needed
+
+        self.__atacking_animation_speed = int(math.sqrt(self.speed) / 2) if int(math.sqrt(self.speed) / 2) > 1 else 1
         self.__moving_animation_speed = int(math.sqrt(self.speed) / 2) if int(math.sqrt(self.speed) / 2) > 1 else 1
         self.__idle_animation_speed = 1
 
         # animation counters - to track which image we should be showing at any time
-        self.__attacking_animations_counter = 0
+        self.__attacking_animation_counter = 0
         self.__moving_animation_counter = 0
         self.__idle_animation_counter = 0
 
@@ -101,74 +103,51 @@ class Player(pygame.sprite.Sprite):
         # animate the player when it's idle
         if self.__animation_state == "Idle":
             if self.direction == "Right":
-                return self.__animate(self.__idle_animations_right, self.__animation_state)
+                return self.__animate(self.__idle_animations_right)
             else:
-                return self.__animate(self.__idle_animations_left, self.__animation_state)
+                return self.__animate(self.__idle_animations_left)
         # animate the player when it's moving
         elif self.__animation_state == "Moving":
             if self.direction == "Right":
-                return self.__animate(self.__right_moving_animations, self.__animation_state)
+                return self.__animate(self.__right_moving_animations)
             else:
-                return self.__animate(self.__left__moving_animations, self.__animation_state)
+                return self.__animate(self.__left__moving_animations)
         # animate the player when it's attacking
         elif self.__animation_state == "Attacking":
             if self.direction == "Right":
-                return self.__animate(self.__right_attacking_animations, self.__animation_state)
+                return self.__animate(self.__right_attacking_animations)
             else:
-                return self.__animate(self.__left_attacking_animations, self.__animation_state)
+                return self.__animate(self.__left_attacking_animations)
 
     # endregion
 
     # region PRIVATE FUNCTIONS
-    def __animate(self, animations, animation_state):
+    def __animate(self, animations):
         """
-        selects images from the animation lists based on animation speed
-        :param animations: a list of images
-        :param animation_state: the current state of the player
-        :return: A scaled image from the list and the players height and width
+        calls the helper classes animate function.
+        # todo make this function even more generic as we are checkking animation states in this and the display func
+        :param animations: a list of animations to use
+        :return: scaled image and the objects rectangle
         """
-
-        #todo extract this function into helper functions and pass in the variables required.
-
         if self.__animation_state == "Idle":
-            # increment the tick so animations happen at certain points - this the same as the game tick
-            self.__animation_tick += 1
-            # change the image to the next in the list
-            if self.__animation_tick % self.__idle_animation_speed == 0:
-                self.__idle_animation_counter += 1
-                # handle list out of bounds and reset the counter and tick
-                if self.__idle_animation_counter > len(animations) - 1:
-                    self.__idle_animation_counter = 0
-                    self.__animation_tick = 0
-            return pygame.transform.scale(animations[self.__idle_animation_counter],
-                                          (self.rect.width, self.rect.height))
-        elif self.__animation_state == "Moving":
-            # increment the tick so animations happen at certain points - this the same as the game tick
-            self.__animation_tick += 1
-            # change the image to the next in the list
-            if self.__animation_tick % self.__moving_animation_speed == 0:
-                self.__moving_animation_counter += 1
-                # handle list out of bounds and reset the counter and tick
-                if self.__moving_animation_counter > len(animations) - 1:
-                    self.__moving_animation_counter = 0
-                    self.__animation_tick = 0
-            return pygame.transform.scale(animations[self.__moving_animation_counter],
-                                          (self.rect.width, self.rect.height))
-        elif self.__animation_state == "Attacking":
-            print("animating the attack")
-            # increment the tick so animations happen at certain points - this the same as the game tick
-            self.__animation_tick += 1
-            # change the image to the next in the list
-            if self.__animation_tick % self.__atacking_animations_speed == 0:
-                self.__attacking_animations_counter += 1
-                # handle list out of bounds and reset the counter and tick
-                if self.__attacking_animations_counter > len(animations) - 1:
-                    self.__attacking_animations_counter = 0
-                    self.__animation_tick = 0
-                    self.__animation_state = "Idle"
-            return pygame.transform.scale(animations[self.__attacking_animations_counter],
-                                          (self.rect.width, self.rect.height))
+            # run the generic animate function which returns an image, the current counter so player can keep track
+            # and the current animation tick
+            self.__idle_animation_counter, self.__animation_tick, image =\
+                animate(self.__animation_tick, self.__idle_animation_speed, self.__idle_animation_counter, animations)
+            return pygame.transform.scale(image, (self.rect.width, self.rect.height))
 
+        elif self.__animation_state == "Moving":
+            self.__moving_animation_counter, self.__animation_tick, image =\
+                animate(self.__animation_tick, self.__moving_animation_speed, self.__moving_animation_counter, animations)
+            return pygame.transform.scale(image, (self.rect.width, self.rect.height))
+
+        elif self.__animation_state == "Attacking":
+            self.__attacking_animation_counter, self.__animation_tick, image = \
+                animate(self.__animation_tick, self.__atacking_animation_speed, self.__attacking_animation_counter,
+                        animations)
+            if self.__attacking_animation_counter == 0:
+                self.__animation_state = "Idle"
+            return pygame.transform.scale(image, (self.rect.width, self.rect.height))
 
 
     def __load_animations(self):

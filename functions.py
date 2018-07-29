@@ -18,3 +18,18 @@ def load_animations(animations, animation_path):
                 image = pygame.image.load(os.path.join((art_asset_path + animation_path + image)))
                 animations.append(image)
     return animations
+
+
+
+def animate(animation_tick, animation_speed, animation_counter, animations):
+
+    # increment the tick so animations happen at certain points - this the same as the game tick
+    animation_tick += 1
+    # change the image to the next in the list
+    if animation_tick % animation_speed == 0:
+        animation_counter += 1
+        # animation list has finished, reset it so it starts again.
+        if animation_counter > len(animations) - 1:
+            animation_counter = 0
+            animation_tick = 0
+    return animation_counter, animation_tick, animations[animation_counter]

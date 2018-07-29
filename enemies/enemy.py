@@ -1,7 +1,7 @@
 import pygame, sys, os
 from pygame.locals import *
 from abc import ABCMeta, abstractmethod
-from functions import load_animations
+from functions import load_animations, animate
 
 
 class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
@@ -45,38 +45,26 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
         :return:
         """
         if self.direction == "Right":
-            return self.animate(self.animations, self.animation_state, True)
+            return self.animate(self.animations, True)
         elif self.direction == "Left":
-            return self.animate(self.animations, self.animation_state)
+            return self.animate(self.animations)
         pass
 
-    def animate(self, animations, animation_state, flip = None):
+    def animate(self, animations, flip = None):
         """
         same as the players animation function - this should be pulled out into helper functions
         :param animations:
         :param animation_state:
         :return:
         """
-        if animation_state == "Moving":
-            # increment the tick so animations on happen at certain points
-            self.animation_tick += 1
-            # do an animation based on the animation speed
-            if self.animation_tick % self.animation_speed == 0:
-                # print(self.__idle_animation_counter)
-                # select a new animation from the list
-                self.moving_animation_counter += 1
-                # check to stop list going out of bounds
-                if self.moving_animation_counter > len(animations) - 1:
-                    self.moving_animation_counter = 0
-                    self.animation_tick = 0
 
-            if not flip:
-                return pygame.transform.scale(animations[self.moving_animation_counter],
-                                          (self.rect.width, self.rect.height))
-            # flips the sprite to face the opposite direction
-            elif flip:
-                return pygame.transform.scale(pygame.transform.flip(animations[self.moving_animation_counter], True, False),
-                                              (self.rect.width, self.rect.height))
+        self.moving_animation_counter, self.animation_tick, image = \
+            animate(self.animation_tick, self.animation_speed, self.moving_animation_counter, animations)
+        if flip:
+            image = pygame.transform.flip(image, True, False)
+        return pygame.transform.scale(image, (self.rect.width, self.rect.height))
+
+
 
 
 
