@@ -13,6 +13,7 @@ class Enemy_controller():
         # a selection of enemy types
         self.enemy_types = ["small_enemy", "big_enemy"]
         self.creeps = []
+        self.dead_creeps = []
         self.game_tick = 0
         # it's a controller so he's allowed to know how big things are.
         self.screen_width = screen_width
@@ -40,6 +41,17 @@ class Enemy_controller():
             self.__spawn_enemy()
             self.game_tick = 0
         self.__update_enemies()
+        self.__clean_up_dead()
+
+    def kill_creep(self, creep):
+        self.dead_creeps.append(creep)
+
+    def __clean_up_dead(self):
+        if self.dead_creeps:
+
+            self.creeps = [x for x in self.creeps if x not in self.creeps]
+            self.dead_creeps.clear()
+
 
 
 

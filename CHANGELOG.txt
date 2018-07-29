@@ -7,6 +7,7 @@ enemy now faces correct direction
 animate helper function created - stops repeated code of selecting images to animate
 created big enemy class
 added random speeds to enemies
+added crude - semi working collision detection
 
 V 0.2
 Finished up random background generation

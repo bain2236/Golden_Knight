@@ -4,6 +4,7 @@ from player import Player
 from sounds import Sound
 from background import Background
 from enemy_controller import Enemy_controller
+from collision_controller import Collision_controller
 
 
 
@@ -27,6 +28,7 @@ class Main:
         self.background = Background()
         self.sound = Sound()
         self.enemy_controller = Enemy_controller(self.WIDTH, self.HEIGHT)
+        self.collision_controller = Collision_controller()
 
 
 
@@ -115,6 +117,17 @@ class Main:
         self.screen.blit(ground, rect)
 
         while not self.done:
+
+
+
+            # handles button pushes
+            self.event_handler(player)
+
+            # update enemy positions and spawn new enemies
+            self.enemy_controller.update()
+
+            # DO ALL THE DRAWING
+
             # draws just the ground layers - stops game asset ghosting
             pos, box = self.background.draw_ground_layers(self.HEIGHT, self.WIDTH)
             self.screen.blit(sky, pos, box)
@@ -124,16 +137,19 @@ class Main:
 
             # draw any creeps that the enemy_controller has
             for creep in self.enemy_controller.creeps:
-                self.draw_object(creep)
+                if self.collision_controller.is_collided_with(player, creep):
+                    self.enemy_controller.kill_creep(creep)
+                    print("Kill the creep")
 
-            # handles button pushes
-            self.event_handler(player)
+                else:
+                    self.draw_object(creep)
 
             # draw the player.
             self.draw_object(player)
 
-            # update enemy positions and spawn new enemies
-            self.enemy_controller.update()
+
+
+
 
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
