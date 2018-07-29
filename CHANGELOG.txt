@@ -3,6 +3,7 @@ created enemy factory, created small enemies
 pulled out load animations into a helper function
 finally got around to adding comments and doc strings to funcs and classes.
 player now finishes full attack sequence per attack, disables all other abilities
+enemy now faces correct direction
 
 V 0.2
 Finished up random background generation

@@ -45,12 +45,12 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
         :return:
         """
         if self.direction == "Right":
-            return self.animate(self.animations, self.animation_state)
+            return self.animate(self.animations, self.animation_state, True)
         elif self.direction == "Left":
             return self.animate(self.animations, self.animation_state)
         pass
 
-    def animate(self, animations, animation_state):
+    def animate(self, animations, animation_state, flip = None):
         """
         same as the players animation function - this should be pulled out into helper functions
         :param animations:
@@ -69,8 +69,14 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
                 if self.moving_animation_counter > len(animations) - 1:
                     self.moving_animation_counter = 0
                     self.animation_tick = 0
-            return pygame.transform.scale(animations[self.moving_animation_counter],
+
+            if not flip:
+                return pygame.transform.scale(animations[self.moving_animation_counter],
                                           (self.rect.width, self.rect.height))
+            # flips the sprite to face the opposite direction
+            elif flip:
+                return pygame.transform.scale(pygame.transform.flip(animations[self.moving_animation_counter], True, False),
+                                              (self.rect.width, self.rect.height))
 
 
 
