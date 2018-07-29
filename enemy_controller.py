@@ -12,8 +12,8 @@ class Enemy_controller():
     def __init__(self, screen_width, screen_height):
         # a selection of enemy types
         self.enemy_types = ["small_enemy", "big_enemy"]
-        self.creeps = []
-        self.dead_creeps = []
+        self.creeps = set()
+        self.dead_creeps = set()
         self.game_tick = 0
         # it's a controller so he's allowed to know how big things are.
         self.screen_width = screen_width
@@ -31,7 +31,8 @@ class Enemy_controller():
         self.game_tick += 1
         # used for debugging
         if self.game_tick % 30 == 0:
-            print("enemies in game {0}".format(self.creeps))
+            for creep in self.creeps:
+                print("enemies in game {0}".format(creep.name))
 
         # randomly spawn an enemy between every X and XX calls.
         # the lower the first rand - the more frequent
@@ -44,12 +45,12 @@ class Enemy_controller():
         self.__clean_up_dead()
 
     def kill_creep(self, creep):
-        self.dead_creeps.append(creep)
+        self.dead_creeps.add(creep)
 
     def __clean_up_dead(self):
         if self.dead_creeps:
 
-            self.creeps = [x for x in self.creeps if x not in self.creeps]
+            self.creeps = self.creeps - self.dead_creeps
             self.dead_creeps.clear()
 
 
@@ -62,7 +63,7 @@ class Enemy_controller():
         # maybe do something fun with the names, like generate end game cinematic in which it scrolls through
         # gravestones with all the names of the enemies you killed
 
-        self.creeps.append(enemies.build_enemy(random.choice(self.enemy_types), name=names.get_first_name(),
+        self.creeps.add(enemies.build_enemy(random.choice(self.enemy_types), name=names.get_first_name(),
                                                screen_size = [self.screen_width, self.screen_height]))
 
     def __update_enemies(self):

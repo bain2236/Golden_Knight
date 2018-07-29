@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         # animation
         # animation paths
         self.__animation_tick = 0
-        self.__animation_state = "Idle"
+        self.state = "Idle"
         self.__idle_path_right = ("Golden Knight stand idle breathing/Golden Knight right idle/")
         self.__idle_path_left = ("Golden Knight stand idle breathing/Golden Knight left idle/")
         self.__left_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face left/")
@@ -68,8 +68,8 @@ class Player(pygame.sprite.Sprite):
         :return:
         """
         # forces the player to remain attacking for the full attack duration
-        if self.__animation_state != "Attacking":
-            self.__animation_state = "Idle"
+        if self.state != "Attacking":
+            self.state = "Idle"
 
     def move(self, key):
         """
@@ -77,8 +77,8 @@ class Player(pygame.sprite.Sprite):
         :param key: the key pressed by the user
         :return:
         """
-        if self.__animation_state != "Attacking":
-            self.__animation_state = "Moving"
+        if self.state != "Attacking":
+            self.state = "Moving"
             if key == pygame.K_LEFT:
                 self.rect.centerx = self.rect.centerx - self.speed
                 self.direction = "Left"
@@ -86,14 +86,14 @@ class Player(pygame.sprite.Sprite):
                 self.rect.centerx = self.rect.centerx + self.speed
                 self.direction = "Right"
             else:
-                self.__animation_state = "Idle"
+                self.state = "Idle"
 
     def attack(self):
         """
         Called when the user hits the attack button
         :return:
         """
-        self.__animation_state = "Attacking"
+        self.state = "Attacking"
 
     def display(self):
         """
@@ -101,19 +101,19 @@ class Player(pygame.sprite.Sprite):
         :return: A scaled image and the players height and width
         """
         # animate the player when it's idle
-        if self.__animation_state == "Idle":
+        if self.state == "Idle":
             if self.direction == "Right":
                 return self.__animate(self.__idle_animations_right)
             else:
                 return self.__animate(self.__idle_animations_left)
         # animate the player when it's moving
-        elif self.__animation_state == "Moving":
+        elif self.state == "Moving":
             if self.direction == "Right":
                 return self.__animate(self.__right_moving_animations)
             else:
                 return self.__animate(self.__left__moving_animations)
         # animate the player when it's attacking
-        elif self.__animation_state == "Attacking":
+        elif self.state == "Attacking":
             if self.direction == "Right":
                 return self.__animate(self.__right_attacking_animations)
             else:
@@ -129,24 +129,24 @@ class Player(pygame.sprite.Sprite):
         :param animations: a list of animations to use
         :return: scaled image and the objects rectangle
         """
-        if self.__animation_state == "Idle":
+        if self.state == "Idle":
             # run the generic animate function which returns an image, the current counter so player can keep track
             # and the current animation tick
             self.__idle_animation_counter, self.__animation_tick, image =\
                 animate(self.__animation_tick, self.__idle_animation_speed, self.__idle_animation_counter, animations)
             return pygame.transform.scale(image, (self.rect.width, self.rect.height))
 
-        elif self.__animation_state == "Moving":
+        elif self.state == "Moving":
             self.__moving_animation_counter, self.__animation_tick, image =\
                 animate(self.__animation_tick, self.__moving_animation_speed, self.__moving_animation_counter, animations)
             return pygame.transform.scale(image, (self.rect.width, self.rect.height))
 
-        elif self.__animation_state == "Attacking":
+        elif self.state == "Attacking":
             self.__attacking_animation_counter, self.__animation_tick, image = \
                 animate(self.__animation_tick, self.__atacking_animation_speed, self.__attacking_animation_counter,
                         animations)
             if self.__attacking_animation_counter == 0:
-                self.__animation_state = "Idle"
+                self.state = "Idle"
             return pygame.transform.scale(image, (self.rect.width, self.rect.height))
 
 

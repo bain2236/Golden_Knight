@@ -5,5 +5,6 @@ class Collision_controller():
         pass
 
     def is_collided_with(self, obj1, obj2):
-        return obj1.rect.colliderect(obj2.rect)
+        if obj1.state == "Attacking":
+            return obj1.rect.colliderect(obj2.rect)
 

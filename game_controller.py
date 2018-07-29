@@ -139,8 +139,6 @@ class Main:
             for creep in self.enemy_controller.creeps:
                 if self.collision_controller.is_collided_with(player, creep):
                     self.enemy_controller.kill_creep(creep)
-                    print("Kill the creep")
-
                 else:
                     self.draw_object(creep)
 
