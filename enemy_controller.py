@@ -11,7 +11,7 @@ class Enemy_controller():
     """
     def __init__(self, screen_width, screen_height):
         # a selection of enemy types
-        self.enemy_types = ["small_enemy"]
+        self.enemy_types = ["small_enemy", "big_enemy"]
         self.creeps = []
         self.game_tick = 0
         # it's a controller so he's allowed to know how big things are.

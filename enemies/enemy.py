@@ -30,9 +30,12 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
         self.animations = load_animations(self.animations, path_to_enemy_animations)
         self.rect = self.animations[0].get_rect()
 
-    @abstractmethod
     def move(self):
-        pass
+        if self.direction == "Left":
+            self.rect.centerx = self.rect.centerx - self.speed
+        elif self.direction == "Right":
+            self.rect.centerx = self.rect.centerx + self.speed
+
 
     @abstractmethod
     def attack(self):
