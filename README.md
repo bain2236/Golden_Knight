@@ -1,7 +1,7 @@
 # Golden Knight
 A hack and slash wave based game
 
-Project plan can be found @ https://europe-enterprise.taskworld.com/bain-studios/#/project/3/task/14
+Project plan can be found @ https://trello.com/b/WrLxEMXH/golden-knight
 
 
 Golden Knight acquired from - https://opengameart.org/content/golden-knight-character-sprite
