@@ -65,7 +65,9 @@ class Player(pygame.sprite.Sprite):
         Default state when player is not doing anything
         :return:
         """
-        self.__animation_state = "Idle"
+        # forces the player to remain attacking for the full attack duration
+        if self.__animation_state != "Attacking":
+            self.__animation_state = "Idle"
 
     def move(self, key):
         """
@@ -73,15 +75,16 @@ class Player(pygame.sprite.Sprite):
         :param key: the key pressed by the user
         :return:
         """
-        self.__animation_state = "Moving"
-        if key == pygame.K_LEFT:
-            self.rect.centerx = self.rect.centerx - self.speed
-            self.direction = "Left"
-        elif key == pygame.K_RIGHT:
-            self.rect.centerx = self.rect.centerx + self.speed
-            self.direction = "Right"
-        else:
-            self.__animation_state = "Idle"
+        if self.__animation_state != "Attacking":
+            self.__animation_state = "Moving"
+            if key == pygame.K_LEFT:
+                self.rect.centerx = self.rect.centerx - self.speed
+                self.direction = "Left"
+            elif key == pygame.K_RIGHT:
+                self.rect.centerx = self.rect.centerx + self.speed
+                self.direction = "Right"
+            else:
+                self.__animation_state = "Idle"
 
     def attack(self):
         """
@@ -162,6 +165,7 @@ class Player(pygame.sprite.Sprite):
                 if self.__attacking_animations_counter > len(animations) - 1:
                     self.__attacking_animations_counter = 0
                     self.__animation_tick = 0
+                    self.__animation_state = "Idle"
             return pygame.transform.scale(animations[self.__attacking_animations_counter],
                                           (self.rect.width, self.rect.height))
 
