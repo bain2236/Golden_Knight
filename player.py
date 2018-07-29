@@ -54,7 +54,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.height = self.size["Height"]
         self.rect.centerx = int(screen_width / 2)
         self.rect.centery = int(screen_height - self.size["Height"])
-        self.__print_rect()
+#        self.__print_rect()
 
         # endregion
 
