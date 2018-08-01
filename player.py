@@ -10,6 +10,8 @@ class Player(pygame.sprite.Sprite):
 
     # region VARIABLES
 
+        self.max_health = 100
+        self.current_health = 100
         self.size = {"Height": int(screen_height / 4), "Width": int(screen_width / 7)}
         self.speed = 7
         self.colour = (255, 0, 0)

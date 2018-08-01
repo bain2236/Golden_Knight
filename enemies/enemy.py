@@ -21,6 +21,10 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
         self.animation_tick = None
         self.animation_speed = None
         self.moving_animation_counter = None
+        self.max_health = 100
+        self.current_health = 100
+
+        self.damage = 100
 
     def load_animations(self, path_to_enemy_animations):
         """
