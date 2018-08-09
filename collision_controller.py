@@ -21,4 +21,15 @@ class Collision_controller():
             player.take_damage(creep)
             print("you did not attack you have taken {0}".format(creep.damage))
 
+#
+# how to handle knockback
+#
+# function knockback(player, creep)
+# find out who is knocked back
+# change state of obj to "knockback"
+# disable all input from player until knockback is over.
+# take obj direction and move it x amount of distance
+# knockback should end after travelling the knockback distance.
+
+
 

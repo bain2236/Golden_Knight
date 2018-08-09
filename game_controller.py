@@ -97,7 +97,27 @@ class Main:
         if self.key_press == pygame.K_SPACE:
             player.attack()
 
+    def game_over(self):
 
+        intro = True
+
+        while intro:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
+
+            self.screen.fill(self.WHITE)
+            largeText = pygame.font.Font('freesansbold.ttf', 115)
+            TextSurf, TextRect = self.text_objects("GAME OVER", largeText)
+            TextRect.center = ((self.WIDTH / 2), (self.HEIGHT / 2))
+            self.screen.blit(TextSurf, TextRect)
+            pygame.display.update()
+            self.clock.tick(15)
+
+    def text_objects(self, text, font):
+        textSurface = font.render(text, True, self.BLACK)
+        return textSurface, textSurface.get_rect()
 
     def start_game(self, player):
         """
@@ -152,6 +172,7 @@ class Main:
             else:
                 self.done = True
                 print("you have must died")
+                self.game_over()
     # Close the window and quit.
 
     pygame.quit()
