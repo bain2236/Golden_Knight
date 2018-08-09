@@ -28,14 +28,18 @@ class Player(pygame.sprite.Sprite):
         self.__right_moving_path = ("Golden Knight walking/Golden Knight walking/Golden Knight walk with sword face right/")
         self.__left_attacking_path = ("Golden Knight attack/Golden Knight attack 2 slash face left/")
         self.__right_attacking_path = ("Golden Knight attack/Golden Knight attack 2 slash face right/")
+        self.__left_dead_path = ("Golden Knight died/Golden Knight died face left with sword/")
+        self.__right_dead_path = ("Golden Knight died/Golden Knight died face right with sword/")
 
         # animation lists
         self.__left_attacking_animations = []
         self.__right_attacking_animations = []
         self.__right_moving_animations = []
         self.__left__moving_animations = []
-        self.__idle_animations_right = []
-        self.__idle_animations_left = []
+        self.__right_idle_animations = []
+        self.__left_idle_animations= []
+        self.__right_dead_animations = []
+        self.__left_dead_animations = []
 
         # animation speeds
         # todo fix the animation speed so it gets faster as the players speed increases - use log but more thought is needed
@@ -43,9 +47,11 @@ class Player(pygame.sprite.Sprite):
         self.__atacking_animation_speed = int(math.sqrt(self.speed) / 2) if int(math.sqrt(self.speed) / 2) > 1 else 1
         self.__moving_animation_speed = int(math.sqrt(self.speed) / 2) if int(math.sqrt(self.speed) / 2) > 1 else 1
         self.__idle_animation_speed = 1
+        self.__dead_animation_speed = 1
 
         # animation counters - to track which image we should be showing at any time
         self.__attacking_animation_counter = 0
+        self.__dead_animation_counter = 0
         self.__moving_animation_counter = 0
         self.__idle_animation_counter = 0
 
@@ -75,6 +81,8 @@ class Player(pygame.sprite.Sprite):
         if self.state != "Attacking":
             self.state = "Idle"
 
+            #print(self.__left_dead_animations)
+
     def move(self, key):
         """
         Handles moving of the player
@@ -102,9 +110,10 @@ class Player(pygame.sprite.Sprite):
 
     def take_damage(self, creep):
         self.current_health = self.current_health - creep.damage
-        print(self.current_health)
+        #print(self.current_health)
         if self.current_health < 0:
-            self.died = True
+            self.state = "Dead"
+
 
     def display(self):
         """
@@ -112,11 +121,12 @@ class Player(pygame.sprite.Sprite):
         :return: A scaled image and the players height and width
         """
         # animate the player when it's idle
+        #print("player state {0}".format(self.state))
         if self.state == "Idle":
             if self.direction == "Right":
-                return self.__animate(self.__idle_animations_right)
+                return self.__animate(self.__right_idle_animations)
             else:
-                return self.__animate(self.__idle_animations_left)
+                return self.__animate(self.__left_idle_animations)
         # animate the player when it's moving
         elif self.state == "Moving":
             if self.direction == "Right":
@@ -129,6 +139,14 @@ class Player(pygame.sprite.Sprite):
                 return self.__animate(self.__right_attacking_animations)
             else:
                 return self.__animate(self.__left_attacking_animations)
+        elif self.state == "Dead":
+            #print("PLAYER HAS DIED.")
+            if self.direction == "Right":
+                print(self.__right_dead_animations)
+                return self.__animate(self.__right_dead_animations)
+            else:
+                print(self.__left_dead_animations)
+                return self.__animate(self.__left_dead_animations)
 
     # endregion
 
@@ -159,6 +177,14 @@ class Player(pygame.sprite.Sprite):
             if self.__attacking_animation_counter == 0:
                 self.state = "Idle"
             return pygame.transform.scale(image, (self.rect.width, self.rect.height))
+        elif self.state == "Dead":
+            print("ANIMATING A DEAD PLAYER")
+            self.__dead_animation_counter, self.__animation_tick, image = \
+                animate(self.__animation_tick, self.__dead_animation_speed, self.__dead_animation_counter,
+                        animations)
+            if self.__dead_animation_counter == 0:
+                pass
+            return pygame.transform.scale(image, (self.rect.width, self.rect.height))
 
 
     def __load_animations(self):
@@ -166,12 +192,17 @@ class Player(pygame.sprite.Sprite):
         Calls the helper function load_animations which fills an animation list
         :return:
         """
-        self.__idle_animations_right = load_animations(self.__idle_animations_right, self.__idle_path_right)
-        self.__idle_animations_left = load_animations(self.__idle_animations_left, self.__idle_path_left)
+        self.__idle_animations_right = load_animations(self.__right_idle_animations, self.__idle_path_right)
+        self.__idle_animations_left = load_animations(self.__left_idle_animations, self.__idle_path_left)
         self.__right_moving_animations = load_animations(self.__right_moving_animations, self.__right_moving_path)
         self.__left__moving_animations = load_animations(self.__left__moving_animations, self.__left_moving_path)
         self.__left_attacking_animations = load_animations(self.__left_attacking_animations, self.__left_attacking_path)
         self.__right_attacking_animations = load_animations(self.__right_attacking_animations, self.__right_attacking_path)
+        print("loading death animations into {0} from {1}".format(self.__left_dead_animations, self.__left_dead_path))
+
+        self.__left_dead_animations = load_animations(self.__left_dead_animations, self.__left_dead_path)
+        self.__right_dead_animations = load_animations(self.__right_dead_animations, self.__right_dead_path)
+
     # endregion
 
     # region DEBUG FUNCTIONS
@@ -186,25 +217,25 @@ class Player(pygame.sprite.Sprite):
                            self.size["Height"],
                            self.size["Width"]))
 
-        def __print_player(self):
-            """
-            Used for debugging
-            :return:
-            """
-            print(self.__dict__)
+    def __print_player(self):
+        """
+        Used for debugging
+        :return:
+        """
+        print(self.__dict__)
 
-        def __print_rect(self):
-            """
-            Used for debugging
-            :return:
-            """
-            print("x : {0} y : {1}".format(self.rect.x, self.rect.y))
-            print("centerx : {0} centery : {1}".format(self.rect.centerx, self.rect.centery))
-            print("center {0}".format(self.rect.center))
-            print("top left : {0} top right : {1}".format(self.rect.left, self.rect.right))
-            print("top : {0} bottom : {1}".format(self.rect.top, self.rect.bottom))
-            print("topleft : {0} bottomright : {1}".format(self.rect.topleft, self.rect.bottomright))
-            print("width : {0} height : {1}".format(self.rect.width, self.rect.height))
+    def __print_rect(self):
+        """
+        Used for debugging
+        :return:
+        """
+        print("x : {0} y : {1}".format(self.rect.x, self.rect.y))
+        print("centerx : {0} centery : {1}".format(self.rect.centerx, self.rect.centery))
+        print("center {0}".format(self.rect.center))
+        print("top left : {0} top right : {1}".format(self.rect.left, self.rect.right))
+        print("top : {0} bottom : {1}".format(self.rect.top, self.rect.bottom))
+        print("topleft : {0} bottomright : {1}".format(self.rect.topleft, self.rect.bottomright))
+        print("width : {0} height : {1}".format(self.rect.width, self.rect.height))
 
     # endregion
 

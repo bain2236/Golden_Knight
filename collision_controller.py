@@ -11,15 +11,15 @@ class Collision_controller():
             # player is attacking and facing the enemy
             # damage the enemy
             creep.take_damage(player)
-            print("you killed {0}".format(creep.name))
+           # print("you killed {0}".format(creep.name))
         elif player.rect.colliderect(creep.rect) and player.state == "Attacking" and player.direction == creep.direction:
             # player is attacking but facing the same direction
             player.take_damage(creep)
-            print("you were facing the wrong direction")
+           # print("you were facing the wrong direction")
         elif player.rect.colliderect(creep.rect) and player.state != "Attacking":
             # player was not even atacking. stupid player
             player.take_damage(creep)
-            print("you did not attack you have taken {0}".format(creep.damage))
+           # print("you did not attack you have taken {0}".format(creep.damage))
 
 #
 # how to handle knockback

@@ -1,5 +1,7 @@
 V0.4
 more work on collisions - player can now die but only on certain conditions, enemiies can die
+basic death animation sorted - the layers are totally wrong though so looks a bit weird.
+but it plays the animation when you die - had to disable the game over screen to get this to work.
 
 V0.3
 created enemy factory, created small enemies

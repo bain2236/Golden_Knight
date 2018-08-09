@@ -62,8 +62,18 @@ class Main:
         :param obj:
         :return:
         """
-        if not obj.died:
+        if isinstance(obj, Player) and not obj.died:
+            #print("drawing the player")
             self.screen.blit(obj.display(), obj.rect)
+        elif isinstance(obj, Player):
+            #print("drawing teh dead player")
+            self.screen.blit(obj.display(), obj.rect)
+
+        elif not obj.died:
+           # print("drawing not dead object {0}".format(obj))
+            self.screen.blit(obj.display(), obj.rect)
+
+
 
     def event_handler(self, player):
         """
@@ -86,7 +96,8 @@ class Main:
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_SPACE:
                     self.key_press = None
-                    player.idle()
+                    if player.state != "Dead":
+                        player.idle()
         # handles escape being pushed to quit the game
         if self.key_press == K_ESCAPE:
             self.done = True
@@ -107,7 +118,7 @@ class Main:
                     pygame.quit()
                     quit()
 
-            self.screen.fill(self.WHITE)
+           # self.screen.fill(self.WHITE)
             largeText = pygame.font.Font('freesansbold.ttf', 115)
             TextSurf, TextRect = self.text_objects("GAME OVER", largeText)
             TextRect.center = ((self.WIDTH / 2), (self.HEIGHT / 2))

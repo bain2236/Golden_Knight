@@ -12,9 +12,11 @@ def load_animations(animations, animation_path):
     # load right idle animations
     for _, _, images in os.walk(art_asset_path + animation_path):
         pass
+    #print("images found in {0}{1}".format(art_asset_path, animation_path))
     if images is not None:
         for image in images:
-            if ".png" in image:
+            if image.lower().endswith("png"):
+                #print("loading image {0}".format(image))
                 image = pygame.image.load(os.path.join((art_asset_path + animation_path + image)))
                 animations.append(image)
     return animations
