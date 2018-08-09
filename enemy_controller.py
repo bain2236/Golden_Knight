@@ -32,7 +32,8 @@ class Enemy_controller():
         # used for debugging
         if self.game_tick % 30 == 0:
             for creep in self.creeps:
-                print("enemies in game {0}".format(creep.name))
+                #print("enemies in game {0}".format(creep.name))
+                pass
 
         # randomly spawn an enemy between every X and XX calls.
         # the lower the first rand - the more frequent
@@ -44,10 +45,11 @@ class Enemy_controller():
         self.__update_enemies()
         self.__clean_up_dead()
 
-    def kill_creep(self, creep):
-        self.dead_creeps.add(creep)
-
     def __clean_up_dead(self):
+        for creep in self.creeps:
+            if creep.died:
+                self.dead_creeps.add(creep)
+
         if self.dead_creeps:
 
             self.creeps = self.creeps - self.dead_creeps

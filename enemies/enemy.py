@@ -23,8 +23,8 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
         self.moving_animation_counter = None
         self.max_health = 100
         self.current_health = 100
-
-        self.damage = 100
+        self.damage = 50
+        self.died = False
 
     def load_animations(self, path_to_enemy_animations):
         """
@@ -71,6 +71,10 @@ class Enemy(pygame.sprite.Sprite, metaclass=ABCMeta):
             image = pygame.transform.flip(image, True, False)
         return pygame.transform.scale(image, (self.rect.width, self.rect.height))
 
+    def take_damage(self, attacker):
+        self.current_health = self.current_health - attacker.damage
+        if self.current_health < 0:
+            self.died = True
 
 
 

@@ -12,6 +12,8 @@ class Player(pygame.sprite.Sprite):
 
         self.max_health = 100
         self.current_health = 100
+        self.damage = 1000
+        self.died = False
         self.size = {"Height": int(screen_height / 4), "Width": int(screen_width / 7)}
         self.speed = 7
         self.colour = (255, 0, 0)
@@ -96,6 +98,13 @@ class Player(pygame.sprite.Sprite):
         :return:
         """
         self.state = "Attacking"
+
+
+    def take_damage(self, creep):
+        self.current_health = self.current_health - creep.damage
+        print(self.current_health)
+        if self.current_health < 0:
+            self.died = True
 
     def display(self):
         """

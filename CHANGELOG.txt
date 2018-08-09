@@ -1,3 +1,6 @@
+V0.4
+more work on collisions - player can now die but only on certain conditions, enemiies can die
+
 V0.3
 created enemy factory, created small enemies
 pulled out load animations into a helper function

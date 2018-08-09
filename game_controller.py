@@ -62,7 +62,8 @@ class Main:
         :param obj:
         :return:
         """
-        self.screen.blit(obj.display(), obj.rect)
+        if not obj.died:
+            self.screen.blit(obj.display(), obj.rect)
 
     def event_handler(self, player):
         """
@@ -117,46 +118,42 @@ class Main:
         self.screen.blit(ground, rect)
 
         while not self.done:
+            if not player.died:
+                # handles button pushes
+                self.event_handler(player)
 
+                # update enemy positions and spawn new enemies
+                self.enemy_controller.update()
 
+                # DO ALL THE DRAWING
 
-            # handles button pushes
-            self.event_handler(player)
+                # draws just the ground layers - stops game asset ghosting
+                pos, box = self.background.draw_ground_layers(self.HEIGHT, self.WIDTH)
+                self.screen.blit(sky, pos, box)
+                self.screen.blit(far, pos, box)
+                self.screen.blit(near, pos, box)
+                self.screen.blit(ground, pos, box)
 
-            # update enemy positions and spawn new enemies
-            self.enemy_controller.update()
-
-            # DO ALL THE DRAWING
-
-            # draws just the ground layers - stops game asset ghosting
-            pos, box = self.background.draw_ground_layers(self.HEIGHT, self.WIDTH)
-            self.screen.blit(sky, pos, box)
-            self.screen.blit(far, pos, box)
-            self.screen.blit(near, pos, box)
-            self.screen.blit(ground, pos, box)
-
-            # draw any creeps that the enemy_controller has
-            for creep in self.enemy_controller.creeps:
-                if self.collision_controller.is_collided_with(player, creep):
-                    self.enemy_controller.kill_creep(creep)
-                else:
+                # draw any creeps that the enemy_controller has
+                for creep in self.enemy_controller.creeps:
+                    # check if t heres any collisions
+                    self.collision_controller.is_collided_with(player, creep)
                     self.draw_object(creep)
 
-            # draw the player.
-            self.draw_object(player)
+                # draw the player.
+                self.draw_object(player)
 
+                # Go ahead and update the screen with what we've drawn.
+                pygame.display.flip()
 
-
-
-
-            # Go ahead and update the screen with what we've drawn.
-            pygame.display.flip()
-
-            # Limit frames per second
-            self.clock.tick(self.FPS)
-            # print(self.clock.get_fps())
-
+                # Limit frames per second
+                self.clock.tick(self.FPS)
+                # print(self.clock.get_fps())
+            else:
+                self.done = True
+                print("you have must died")
     # Close the window and quit.
+
     pygame.quit()
 
 

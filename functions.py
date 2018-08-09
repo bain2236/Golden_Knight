@@ -33,3 +33,4 @@ def animate(animation_tick, animation_speed, animation_counter, animations):
             animation_counter = 0
             animation_tick = 0
     return animation_counter, animation_tick, animations[animation_counter]
+
