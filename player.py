@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.current_health = 100
         self.damage = 1000
         self.died = False
-        self.size = {"Height": int(screen_height / 4), "Width": int(screen_width / 7)}
+        self.size = {"Height": 220, "Width": 280}
         self.speed = 7
         self.colour = (255, 0, 0)
         self.direction = "Right"
@@ -65,7 +65,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.width = self.size["Width"]
         self.rect.height = self.size["Height"]
         self.rect.centerx = int(screen_width / 2)
-        self.rect.centery = int(screen_height - self.size["Height"])
+        self.rect.centery = 680
+
+        self.slash = False
 #        self.__print_rect()
 
         # endregion
@@ -107,12 +109,15 @@ class Player(pygame.sprite.Sprite):
         """
         self.state = "Attacking"
 
+    def finish_attack(self):
+        self.slash = True
 
     def take_damage(self, creep):
-        self.current_health = self.current_health - creep.damage
-        #print(self.current_health)
-        if self.current_health < 0:
-            self.state = "Dead"
+        if self.state != "Dead":
+            self.current_health = self.current_health - creep.damage
+            #print(self.current_health)
+            if self.current_health < 0:
+                self.state = "Dead"
 
 
     def display(self):
@@ -121,7 +126,7 @@ class Player(pygame.sprite.Sprite):
         :return: A scaled image and the players height and width
         """
         # animate the player when it's idle
-        #print("player state {0}".format(self.state))
+        print("player state {0}".format(self.state))
         if self.state == "Idle":
             if self.direction == "Right":
                 return self.__animate(self.__right_idle_animations)
@@ -139,7 +144,7 @@ class Player(pygame.sprite.Sprite):
                 return self.__animate(self.__right_attacking_animations)
             else:
                 return self.__animate(self.__left_attacking_animations)
-        elif self.state == "Dead":
+        elif self.state == "Dead" or self.state == "Dead":
             #print("PLAYER HAS DIED.")
             if self.direction == "Right":
                 print(self.__right_dead_animations)
@@ -171,20 +176,48 @@ class Player(pygame.sprite.Sprite):
             return pygame.transform.scale(image, (self.rect.width, self.rect.height))
 
         elif self.state == "Attacking":
-            self.__attacking_animation_counter, self.__animation_tick, image = \
-                animate(self.__animation_tick, self.__atacking_animation_speed, self.__attacking_animation_counter,
-                        animations)
+            # less than half way through the full attack animation, do the attack animation normally
+            if self.__attacking_animation_counter < len(animations)  / 2:
+                self.__attacking_animation_counter, self.__animation_tick, image = \
+                    animate(self.__animation_tick, self.__atacking_animation_speed, self.__attacking_animation_counter,
+                            animations)
+            elif self.__attacking_animation_counter > len(animations)  / 2:
+                # in the second half of the animation we want to pause on the first frame
+                if not self.slash:
+                    self.__attacking_animation_counter, self.__animation_tick, image = \
+                        animate(self.__animation_tick, self.__atacking_animation_speed, self.__attacking_animation_counter,
+                                animations, pause=True)
+                    print("pausing slash = {0}".format(self.slash))
+                # user has released the space button so we can finish up our animation
+                if self.slash:
+                    self.__attacking_animation_counter, self.__animation_tick, image = \
+                        animate(self.__animation_tick, self.__atacking_animation_speed, self.__attacking_animation_counter,
+                                animations)
+                    print("slashing {0}".format(self.slash))
+            # complete the entire set of animations.
             if self.__attacking_animation_counter == 0:
+                self.slash = False
                 self.state = "Idle"
+                print("animation complete, setting idddle and not slash {0} player is now {1}".format(self.slash, self.state))
             return pygame.transform.scale(image, (self.rect.width, self.rect.height))
+
+
         elif self.state == "Dead":
-            print("ANIMATING A DEAD PLAYER")
-            self.__dead_animation_counter, self.__animation_tick, image = \
-                animate(self.__animation_tick, self.__dead_animation_speed, self.__dead_animation_counter,
-                        animations)
+            print("PLAYER IS NOW DEAD ")
+            if self.__dead_animation_counter == len(animations) -1:
+                self.__dead_animation_counter, self.__animation_tick, image = \
+                    animate(self.__animation_tick, self.__dead_animation_speed, self.__dead_animation_counter,
+                            animations, pause=True)
+                self.died = True
+            else:
+                print("ANIMATING A Dead PLAYER")
+                self.__dead_animation_counter, self.__animation_tick, image = \
+                    animate(self.__animation_tick, self.__dead_animation_speed, self.__dead_animation_counter,
+                            animations)
             if self.__dead_animation_counter == 0:
-                pass
+                self.state = "Dead"
             return pygame.transform.scale(image, (self.rect.width, self.rect.height))
+
 
 
     def __load_animations(self):

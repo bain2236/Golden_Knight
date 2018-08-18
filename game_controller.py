@@ -94,10 +94,13 @@ class Main:
             # allows the player to keep a button pressed to continously handle that event
             # by setting the key press to none if the key is released
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_SPACE:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     self.key_press = None
                     if player.state != "Dead":
                         player.idle()
+                if event.key == pygame.K_SPACE:
+                    player.finish_attack()
+                    self.key_press = None
         # handles escape being pushed to quit the game
         if self.key_press == K_ESCAPE:
             self.done = True
@@ -107,6 +110,7 @@ class Main:
         # attack button pressed
         if self.key_press == pygame.K_SPACE:
             player.attack()
+
 
     def game_over(self):
 
@@ -148,6 +152,8 @@ class Main:
         self.screen.blit(near, rect)
         self.screen.blit(ground, rect)
 
+        # used to debug the draw layers function
+        #self.screen.fill(self.WHITE)
         while not self.done:
             if not player.died:
                 # handles button pushes

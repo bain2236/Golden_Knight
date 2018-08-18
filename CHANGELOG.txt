@@ -1,3 +1,7 @@
+V0.5
+player attack now pauses when you hold down space bar so you can time your attacks better
+player death animation now plays once then display the game over screen once you're just led on the floor.
+
 V0.4
 more work on collisions - player can now die but only on certain conditions, enemiies can die
 basic death animation sorted - the layers are totally wrong though so looks a bit weird.

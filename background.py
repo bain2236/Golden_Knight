@@ -92,8 +92,10 @@ class Background(pygame.sprite.Sprite):
         :param width:
         :return:
         """
-        return (0, height - 300),\
-               (0, height - 300, width, 300)
+
+        # magic numbers depict the size of the box to draw
+        return (0, height - 400),\
+               (0, height - 400, width, 350)
 
 
     def draw_background(self):
