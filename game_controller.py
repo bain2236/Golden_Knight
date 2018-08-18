@@ -5,14 +5,15 @@ from sounds import Sound
 from background import Background
 from enemy_controller import Enemy_controller
 from collision_controller import Collision_controller
+from user_interface_controller import User_interface
 
 
 
-class Main:
+class Game:
     """
     Main game controller
     """
-    def __init__(self):
+    def __init__(self, player, screen, clock):
         # Define some colors
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
@@ -21,40 +22,16 @@ class Main:
         self.HEIGHT = 900
         self.WIDTH = 1920
         self.FPS = 30
-        self.done = False
-        self.screen = None
-        self.clock = None
+        self.game_over = False
+        self.screen = screen
+        self.clock = clock
         self.key_press = None
         self.background = Background()
         self.sound = Sound()
         self.enemy_controller = Enemy_controller(self.WIDTH, self.HEIGHT)
         self.collision_controller = Collision_controller()
+        self.player = player
 
-
-
-    def setup_game(self):
-        """
-        initial pygame setup, screen, clock and player
-        :return: Player object
-        """
-        # Setup
-        pygame.init()
-        # create player
-        player = Player(self.WIDTH, self.HEIGHT)
-
-        # Set the width and height of the screen [width,height]
-        size = [self.WIDTH, self.HEIGHT]
-        self.screen = pygame.display.set_mode(size)
-
-        pygame.display.set_caption("Golden Knight V0.1")
-
-        # Used to manage how fast the screen updates
-        self.clock = pygame.time.Clock()
-
-        # Hide the mouse cursor
-        pygame.mouse.set_visible(0)
-
-        return player
 
     def draw_object(self, obj):
         """
@@ -87,7 +64,7 @@ class Main:
         for event in pygame.event.get():
             # quit the game
             if event.type == pygame.QUIT:
-                self.done = True
+                self.game_over = True
             # handle which button has been pressed
             elif event.type == pygame.KEYDOWN:
                 self.key_press = event.key
@@ -101,40 +78,22 @@ class Main:
                 if event.key == pygame.K_SPACE:
                     player.finish_attack()
                     self.key_press = None
+
+        if player.state != "Dead":
+            # move the player with whatever direction was used.
+            if self.key_press is not None and not self.key_press == pygame.K_SPACE:
+                player.move(self.key_press)
+            # attack button pressed
+            if self.key_press == pygame.K_SPACE:
+                player.attack()
         # handles escape being pushed to quit the game
         if self.key_press == K_ESCAPE:
-            self.done = True
-        # move the player with whatever direction was used.
-        if self.key_press is not None and not self.key_press == pygame.K_SPACE:
-            player.move(self.key_press)
-        # attack button pressed
-        if self.key_press == pygame.K_SPACE:
-            player.attack()
+            self.game_over = True
 
 
-    def game_over(self):
 
-        intro = True
 
-        while intro:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT or event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    quit()
-
-           # self.screen.fill(self.WHITE)
-            largeText = pygame.font.Font('freesansbold.ttf', 115)
-            TextSurf, TextRect = self.text_objects("GAME OVER", largeText)
-            TextRect.center = ((self.WIDTH / 2), (self.HEIGHT / 2))
-            self.screen.blit(TextSurf, TextRect)
-            pygame.display.update()
-            self.clock.tick(15)
-
-    def text_objects(self, text, font):
-        textSurface = font.render(text, True, self.BLACK)
-        return textSurface, textSurface.get_rect()
-
-    def start_game(self, player):
+    def play_game(self):
         """
         Main game loop
         :param player:
@@ -143,7 +102,7 @@ class Main:
         # turn on background music
         self.sound.play_music()
         # fill the screen white
-        self.screen.fill(self.WHITE)
+#        self.screen.fill(self.WHITE)
         # initial draw of all background layers
         sky, ground, near, far, rect = self.background.draw_all((self.WIDTH, self.HEIGHT))
         # blit all elements to the screen
@@ -154,48 +113,73 @@ class Main:
 
         # used to debug the draw layers function
         #self.screen.fill(self.WHITE)
-        while not self.done:
-            if not player.died:
-                # handles button pushes
-                self.event_handler(player)
+        while not self.player.died:
+            # handles button pushes
+            self.event_handler(self.player)
 
-                # update enemy positions and spawn new enemies
-                self.enemy_controller.update()
+            # update enemy positions and spawn new enemies
+            self.enemy_controller.update()
 
-                # DO ALL THE DRAWING
+            # DO ALL THE DRAWING
 
-                # draws just the ground layers - stops game asset ghosting
-                pos, box = self.background.draw_ground_layers(self.HEIGHT, self.WIDTH)
-                self.screen.blit(sky, pos, box)
-                self.screen.blit(far, pos, box)
-                self.screen.blit(near, pos, box)
-                self.screen.blit(ground, pos, box)
+            # draws just the ground layers - stops game asset ghosting
+            pos, box = self.background.draw_ground_layers(self.HEIGHT, self.WIDTH)
+            self.screen.blit(sky, pos, box)
+            self.screen.blit(far, pos, box)
+            self.screen.blit(near, pos, box)
+            self.screen.blit(ground, pos, box)
 
-                # draw any creeps that the enemy_controller has
-                for creep in self.enemy_controller.creeps:
-                    # check if t heres any collisions
-                    self.collision_controller.is_collided_with(player, creep)
-                    self.draw_object(creep)
+            # draw any creeps that the enemy_controller has
+            for creep in self.enemy_controller.creeps:
+                # check if t heres any collisions
+                self.collision_controller.is_collided_with(self.player, creep)
+                self.draw_object(creep)
 
-                # draw the player.
-                self.draw_object(player)
+            # draw the player.
+            self.draw_object(self.player)
 
-                # Go ahead and update the screen with what we've drawn.
-                pygame.display.flip()
+            # Go ahead and update the screen with what we've drawn.
+            pygame.display.flip()
 
-                # Limit frames per second
-                self.clock.tick(self.FPS)
-                # print(self.clock.get_fps())
-            else:
-                self.done = True
-                print("you have must died")
-                self.game_over()
-    # Close the window and quit.
-
-    pygame.quit()
+            # Limit frames per second
+            self.clock.tick(self.FPS)
+            # print(self.clock.get_fps())
 
 
 if __name__ == "__main__":
-    game_controller = Main()
-    player = game_controller.setup_game()
-    game_controller.start_game(player)
+    # Setup
+    pygame.init()
+    # Set the width and height of the screen [width,height]
+
+    HEIGHT = 900
+    WIDTH = 1920
+    size = [WIDTH, HEIGHT]
+    screen = pygame.display.set_mode(size)
+    pygame.display.set_caption("Golden Knight V0.1")
+
+    # Used to manage how fast the screen updates
+    clock = pygame.time.Clock()
+    hud = User_interface(WIDTH, HEIGHT, screen, clock)
+
+    # Hide the mouse cursor
+#    pygame.mouse.set_visible(0)
+    playing = False
+    user_quit = False
+    # user still wants to play
+    while not user_quit:
+
+        # show the main menu until the player selects play
+        user_quit = hud.main_menu()
+        # create a game and start playing - return from playing if you die
+        player = Player(WIDTH, HEIGHT)
+        game_controller = Game(player, screen, clock)
+        game_controller.play_game()
+
+        # user has died. sit in this loop until they decide to restart or now
+        # sit inside the game over screen until the user hits restart or not
+        restart = hud.game_over()
+        if restart:
+            user_quit = False
+        else:
+            user_quit = True
+

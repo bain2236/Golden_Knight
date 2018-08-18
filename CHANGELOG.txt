@@ -1,6 +1,9 @@
 V0.5
 player attack now pauses when you hold down space bar so you can time your attacks better
 player death animation now plays once then display the game over screen once you're just led on the floor.
+minor redesign of main runnning function - placeholder user interface created. game over screen can now loop back around
+to play the game again.
+
 
 V0.4
 more work on collisions - player can now die but only on certain conditions, enemiies can die
