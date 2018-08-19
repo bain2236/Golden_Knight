@@ -37,3 +37,8 @@ def animate(animation_tick, animation_speed, animation_counter, animations, paus
             animation_tick = 0
     return animation_counter, animation_tick, animations[animation_counter]
 
+
+def load_art(path):
+    image = pygame.image.load(os.path.join((art_asset_path + path)))
+    return image
+

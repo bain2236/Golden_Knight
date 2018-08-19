@@ -3,6 +3,9 @@ player attack now pauses when you hold down space bar so you can time your attac
 player death animation now plays once then display the game over screen once you're just led on the floor.
 minor redesign of main runnning function - placeholder user interface created. game over screen can now loop back around
 to play the game again.
+main menu and game over screen created - unsure on the button art and the background art.. but hey it will do for now
+buttons are clickable and do what they should..apart from the leaderboard as there is no leaderboard atm
+button events don't appear to be very fast. also could do with a loading image when the game is booting up
 
 
 V0.4
